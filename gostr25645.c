@@ -5,7 +5,7 @@
 /*
  * simple testing:
  * 
- *      $ cc ./gostr25645.c -lm -DTEST -o ./gostr25645
+ *      $ cc ./gostr25645.c -lm -DTEST_GOSTR25645 -o ./gostr25645
  *      $ ./gostr25645 
  *      prepared: 
  *          F10_7    145.935
@@ -43,7 +43,7 @@ typedef struct {
     double l[5];
 } gostr25645_coefs;
 
-// Table-1
+/* Table-1 */
 static const double A[9] = {
     -2.53418e-02,
     -2.44075e-03,
@@ -55,7 +55,7 @@ static const double A[9] = {
     +1.73227e-15,
     -1.06271e-18
 };
-// Table-2
+/* Table-2 */
 static const gostr25645_coefs LOW[7] = {
 {
     75, 120, 26.8629, -0.451674, 0.00290397, -1.06953e-5, 2.21598e-8, -2.42941e-11, 
@@ -121,7 +121,7 @@ static const gostr25645_coefs LOW[7] = {
     -3.69498e-5, 5.09134e-8, -2.82878e-11
 }
 };
-// Table-3
+/* Table-3 */
 static const gostr25645_coefs HIGH[7] = {
 {
     75, 500, 17.8781, -0.132025, 0.000227717, -2.2543e-7, 1.33574e-10, -4.50458e-14, 
@@ -235,7 +235,6 @@ double rho_gostr25645(
     d = (HIGH[F0_index].d_h > h) ? LOW[F0_index].d : HIGH[F0_index].d;
     e = (HIGH[F0_index].e_h > h) ? LOW[F0_index].e : HIGH[F0_index].e;
     l = (HIGH[F0_index].l_h > h) ? LOW[F0_index].l : HIGH[F0_index].l;
-    //n = (HIGH[F0_index].n_h > h) ? LOW[F0_index].n : HIGH[F0_index].n;
     n = LOW[F0_index].n;
     phi_1 = LOW[F0_index].phi_1;
     
@@ -248,8 +247,8 @@ double rho_gostr25645(
     r = sqrt(x*x + y*y + z*z);
     beta = sun_ra - gst_midnight - EARTH_WROT*sod + phi_1;
     
-    // minor premature optimization
-    #ifdef _GNU_SOURCEsss
+    /* minor premature optimization */
+    #ifdef _GNU_SOURCE
     sincos(sun_de, &sin_sun_de, &cos_sun_de);
     sincos(beta, &sin_beta, &cos_beta);
     #else
@@ -260,7 +259,7 @@ double rho_gostr25645(
     #endif
     
     cosphi = (z*sin_sun_de + cos_sun_de * (x*cos_beta + y*sin_beta)) / r;
-    // cos(x) = sqrt((cos(2x) + 1) / 2)
+    /* cos(x) = sqrt((cos(2x) + 1) / 2) */
     cosphio2 = sqrt((cosphi + 1.0) * 0.5);
     
     for (tmp1 = 0.0, i = 0; i < 5; i++) tmp1 += l[i] * h_power[i];
@@ -367,12 +366,12 @@ void prepare_gostr25645(
 }
 
 
-#ifdef TEST
+#ifdef TEST_GOSTR25645
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 const char * DSD[] = {
-    //"#  Date     10.7cm Number  Hemis. Regions Field  Flux   C  M  X  S  1  2  3",
+    /* "#  Date     10.7cm Number  Hemis. Regions Field  Flux   C  M  X  S  1  2  3", */
     "2015 01 01  138    101      870      1    -999   B4.9   3  0  0  9  0  0  0",
     "2015 01 02  146    113     1250      1    -999   B4.9   3  0  0  9  0  0  0",
     "2015 01 03  149    122     1300      0    -999   B5.7  10  1  0 13  1  0  0",
@@ -465,7 +464,7 @@ const char * DSD[] = {
     "2015 03 31  128     53      350      0    -999   B4.7   0  0  0  0  0  0  0"
 };
 const char * DGD[] = {
-    //"#  Date        A     K-indices        A     K-indices        A     K-indices",
+    /* "#  Date        A     K-indices        A     K-indices        A     K-indices", */
     "2015 01 01     7  2 2 1 1 2 2 2 3     5  1 1 2 1 2 2 1 2     7  2 1 1 1 1 2 2 3",
     "2015 01 02     8  3 1 1 2 2 2 2 3    17  2 2 3 2 5 2 4 3    12  3 1 2 2 3 2 3 4",
     "2015 01 03    13  4 2 3 3 3 3 2 1    18  4 3 3 5 4 2 1 0    15  5 3 3 3 3 2 2 1",
@@ -647,4 +646,4 @@ int main(int argc, char *argv[]) {
     
     return 0;
 }
-#endif
+#endif /* TEST_GOTR25645 */
