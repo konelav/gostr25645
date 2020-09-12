@@ -1,2 +1,2 @@
 # gostr25645
-Model of upper atmosphere according to GOST-R 25646.166-2004
+Model of upper atmosphere according to GOST-R 25645.166-2004
